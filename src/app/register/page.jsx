@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { register } from "../utils/api";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Loading from "../components/Loading";
 
 export default function Register() {
   const [firstName, setFirstName] = useState("");
@@ -14,6 +15,7 @@ export default function Register() {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   // Enviamos el formulario a la API
@@ -23,6 +25,8 @@ export default function Register() {
       setError("You must accept the terms and conditions to continue");
       return;
     }
+
+    setLoading(true); // Damos feedback al usuario de que la petición se está procesando
 
     try {
       const formData = new FormData();
@@ -47,6 +51,8 @@ export default function Register() {
       }
     } catch (error) {
       setError("An unexpected error occurred");
+    } finally {
+      setLoading(false); // Cando la petición haya terminado, quitamos el spinner de carga
     }
   };
 
@@ -133,8 +139,9 @@ export default function Register() {
           <button
             type="submit"
             className="w-full bg-teal-500 text-white py-3 text-sm rounded-lg hover:bg-teal-600 transition duration-200"
+            disabled={loading} // Deshabilitamos el botón mientras se procesa la petición
           >
-            Sing up with email
+            {loading ? <Loading /> : "Sing up with email"}
           </button>
         </form>
       </div>

@@ -78,3 +78,24 @@ export async function loginUser(email, password) {
     const data = await response.json();
     return data;
 }
+
+// llamada a la api para crear clientes
+export async function addClient(clientData, token) {
+    const response = await fetch(`${API_BASE_URL}/api/client`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`, // pasamos el token de autenticación
+        },
+        body: JSON.stringify(clientData),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.message || "Error adding client", response.status);
+    }
+
+    return data;
+}
+    

@@ -4,12 +4,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { loginUser } from "../utils/api";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Loading from "../components/Loading";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const togglePasswordVisibility = () => {
@@ -18,6 +20,8 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setLoading(true);
 
     try {
       const result = await loginUser(email, password);
@@ -29,6 +33,8 @@ export default function Login() {
       }
     } catch (error) {
       setError("Error logging in");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,8 +93,9 @@ export default function Login() {
           <button
             type="submit"
             className="w-full bg-teal-500 text-white py-3 text-sm rounded-lg hover:bg-teal-600 transition duration-200"
+            disabled={loading}
           >
-            Sign in with email
+            {loading ? <Loading /> : "Sign in with email"}
           </button>
         </form>
         <div className="text-center mt-6">

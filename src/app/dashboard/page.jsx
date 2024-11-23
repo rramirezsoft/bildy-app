@@ -1,15 +1,24 @@
+"use client";
+
+import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 
 export default function Dashboard() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
       {/* Barra lateral */}
-      <Sidebar />
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
       <div className="flex-1 flex flex-col">
         {/* Barra superior */}
-        <Header />
+        <Header toggleSidebar={toggleSidebar} />
 
         {/* Contenido principal */}
         <main className="flex flex-col md:flex-row flex-1 p-6 gap-6">

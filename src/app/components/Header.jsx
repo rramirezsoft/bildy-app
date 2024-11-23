@@ -1,8 +1,11 @@
-export default function Header() {
+export default function Header({ toggleSidebar }) {
   return (
     <header className="bg-white shadow p-4 flex items-center justify-between gap-4 flex-wrap">
-      {/* Botón para abrir/cerrar el menú en dispositivos pequeños */}
-      <button className="bg-blue-700 text-white p-2 fixed top-4 left-4 z-50 md:hidden">
+      {/* Botón para abrir/cerrar el menú en dispositivos pequeños y medianos */}
+      <button
+        className="bg-blue-700 text-white p-2 lg:hidden"
+        onClick={toggleSidebar}
+      >
         ☰
       </button>
 
@@ -20,7 +23,7 @@ export default function Header() {
           alt="User"
           className="h-10 w-10 rounded-full"
         />
-        <span className="font-semibold">Cody Fisher</span>
+        <span className="font-semibold">Raúl Ramírez</span>
       </div>
     </header>
   );

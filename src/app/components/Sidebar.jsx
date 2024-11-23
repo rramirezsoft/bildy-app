@@ -32,19 +32,19 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
           <nav className="space-y-4 p-4">
             <a href="#" className="flex items-center space-x-2">
               <FaUsers />
-              <span>Clientes</span>
+              <span>Clients</span>
             </a>
             <a href="#" className="flex items-center space-x-2">
               <FaProjectDiagram />
-              <span>Proyectos</span>
+              <span>Projects</span>
             </a>
             <a href="#" className="flex items-center space-x-2">
               <FaFileInvoice />
-              <span>Albaranes</span>
+              <span>Delivery Notes</span>
             </a>
             <a href="#" className="flex items-center space-x-2">
               <FaCog />
-              <span>Ajustes</span>
+              <span>Settings</span>
             </a>
           </nav>
         </div>

@@ -12,7 +12,7 @@ export default function Header({ toggleSidebar }) {
       {/* Barra de búsqueda: ocupando el resto del espacio */}
       <input
         type="text"
-        placeholder="Buscar..."
+        placeholder="Search..."
         className="flex-grow p-2 border border-gray-300 rounded-lg md:ml-12"
       />
 
@@ -23,7 +23,7 @@ export default function Header({ toggleSidebar }) {
           alt="User"
           className="h-10 w-10 rounded-full"
         />
-        <span className="font-semibold">Raúl Ramírez</span>
+        <span className="font-semibold">User Name</span>
       </div>
     </header>
   );

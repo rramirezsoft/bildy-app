@@ -16,11 +16,10 @@ export async function registerUser(formData) {
             password: formData.get("password"),
         })
     });
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Error registrando usuario");
-    }
     const data = await response.json();
+    if (!response.ok) {
+        throw { message: data.message || "Error registering user", status: response.status };
+    }
     return data;
 }
 
@@ -28,11 +27,15 @@ export async function register(formData) {
     try {
         const user = await registerUser(formData);
         if (user && user.token) {
-            return { success: true, token: user.token, redirectTo: '/verification' };
+            return { 
+                success: true, 
+                token: user.token, 
+                redirectTo: `/verification`,
+            };
         }
-        return { success: false, message: "No se pudo obtener el token" };
-    } catch (error) {
-        return { success: false, message: error.message };
+        return { success: false, message: "Failed to get Token" };
+    } catch (error) { 
+        return { success: false, message: error.message || "Unknown error" };
     }
 }
 
@@ -69,7 +72,7 @@ export async function loginUser(email, password) {
     });
 
     if (!response.ok) {
-        throw new Error("Error iniciando sesión");
+        throw new Error("Error");
     }
 
     const data = await response.json();

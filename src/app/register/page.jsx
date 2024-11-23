@@ -20,7 +20,7 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!termsAccepted) {
-      setError("Debes aceptar los términos y condiciones");
+      setError("You must accept the terms and conditions to continue");
       return;
     }
 
@@ -33,15 +33,20 @@ export default function Register() {
 
       const result = await register(formData); // Llamada a la API desde la funcion register de utils/api.js
       if (result.success) {
+        localStorage.setItem("email", email); // Guardamos el email en el localStorage para mostrarlo en la página de verificación
         document.cookie = `bytoken=${result.token}; path=/;`; // Guardamos el token generado en una cookie
         setError(null);
         setSuccess(true);
         router.push(result.redirectTo);
       } else {
-        setError(result.message);
+        if (result.message.includes("USER_EXISTS")) {
+          setError("User already exists");
+        } else {
+          setError(result.message);
+        }
       }
     } catch (error) {
-      setError("Error registrando usuario");
+      setError("An unexpected error occurred");
     }
   };
 
@@ -96,7 +101,11 @@ export default function Register() {
               className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
               onClick={() => handleShowPassword()}
             >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
+              {showPassword ? (
+                <FaEyeSlash className="text-gray-500" />
+              ) : (
+                <FaEye className="text-gray-500" />
+              )}
             </div>
           </div>
           <div className="mb-4">

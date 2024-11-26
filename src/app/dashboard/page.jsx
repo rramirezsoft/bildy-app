@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Sidebar from "../components/Sidebar";
-import Header from "../components/Header";
+import Sidebar from "../components/dashboard/Sidebar";
+import Header from "../components/dashboard/Header";
 
 export default function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -16,36 +16,48 @@ export default function Dashboard() {
       {/* Barra lateral */}
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col bg-gray-100">
         {/* Barra superior */}
         <Header toggleSidebar={toggleSidebar} />
 
         {/* Contenido principal */}
         <main className="flex flex-col md:flex-row flex-1 p-6 gap-6">
           {/* Bloque izquierdo: Formulario */}
-          <div className="flex-1 bg-white shadow rounded-lg p-6">
-            <h3 className="text-xl font-semibold">Add Clients</h3>
-            {/* Aquí iría el formulario */}
+          <div className="flex-1 bg-white shadow rounded-lg p-6 border border-gray-300 flex flex-col items-center justify-center text-center">
+            <img
+              src="/img/menu.png"
+              alt="Menu"
+              className="w-1/2 max-w-sm mb-6"
+            />
+            <h1 className="text-2xl font-bold mb-2">
+              Create your first client
+            </h1>
+            <p className="text-gray-600 mb-6">
+              To be able to generate digital delivery notes
+            </p>
+            <button className="bg-blue-700 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-600 transition">
+              Let's go!
+            </button>
           </div>
 
           {/* Bloque derecho: Detalles */}
           <div className="w-full md:w-1/3 space-y-6">
-            <div className="bg-white shadow rounded-lg p-4">
+            <div className="bg-white shadow rounded-lg p-4 border border-gray-300">
               <h3 className="text-xl font-semibold">Logo</h3>
               <div className="mt-4">
-                <div className="h-24 w-24 mx-auto bg-gray-100 rounded-lg flex items-center justify-center">
+                <div className="h-24 w-24 mx-auto bg-gray-100 rounded-lg flex items-center justify-center border border-gray-300">
                   <p className="text-gray-500">Logo</p>
                 </div>
               </div>
             </div>
-            <div className="bg-white shadow rounded-lg p-4">
+            <div className="bg-white shadow rounded-lg p-4 border border-gray-300">
               <h3 className="text-xl font-semibold">Notes</h3>
               <textarea
                 className="w-full mt-2 p-2 border border-gray-300 rounded-lg"
                 placeholder="Add notes about your customer..."
               />
             </div>
-            <div className="bg-white shadow rounded-lg p-4">
+            <div className="bg-white shadow rounded-lg p-4 border border-gray-300">
               <h3 className="text-xl font-semibold">Tags</h3>
               <input
                 type="text"

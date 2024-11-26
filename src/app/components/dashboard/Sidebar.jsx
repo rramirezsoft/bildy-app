@@ -7,6 +7,7 @@ import {
   FaCog,
   FaChartPie,
 } from "react-icons/fa";
+import Image from "next/image";
 
 export default function Sidebar({ isOpen, toggleSidebar }) {
   return (
@@ -28,10 +29,12 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
         >
           {/* Logo de Bildy */}
           <div className="sidebar-header flex items-center justify-center py-6 border-b border-gray-300">
-            <img
-              src="img/logo_bildy.png"
+            <Image
+              src="/img/logo_bildy.png"
               alt="Bildy Logo"
               className="sidebar-logo w-40"
+              width={160}
+              height={40}
             />
           </div>
 

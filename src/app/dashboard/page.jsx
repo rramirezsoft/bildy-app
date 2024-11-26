@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Sidebar from "../components/dashboard/Sidebar";
 import Header from "../components/dashboard/Header";
+import Image from "next/image";
 
 export default function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -24,10 +25,12 @@ export default function Dashboard() {
         <main className="flex flex-col md:flex-row flex-1 p-6 gap-6">
           {/* Bloque izquierdo: Formulario */}
           <div className="flex-1 bg-white shadow rounded-lg p-6 border border-gray-300 flex flex-col items-center justify-center text-center">
-            <img
+            <Image
               src="/img/menu.png"
               alt="Menu"
               className="w-1/2 max-w-sm mb-6"
+              width={200}
+              height={200}
             />
             <h1 className="text-2xl font-bold mb-2">
               Create your first client

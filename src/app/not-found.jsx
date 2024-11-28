@@ -25,8 +25,8 @@ export default function NotFound() {
           Page Not Found
         </h1>
         <p className="text-lg text-gray-600 mb-6">
-          The page you are looking for doesn't exist. Please check the URL or go
-          back to the dashboard.
+          The page you are looking for doesn&apos;t exist. Please check the URL
+          or go back to the dashboard.
         </p>
         <button
           onClick={handleGoHome}

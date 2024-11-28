@@ -34,7 +34,7 @@ export default function Clients() {
           onClick={handleShowClientForm}
           className="bg-blue-700 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-600 transition"
         >
-          Let's go!
+          Let&apos;s go!
         </button>
       </div>
       {clientFormVisible && <ClientForm onClose={handleCloseClientForm} />}

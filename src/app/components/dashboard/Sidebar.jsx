@@ -6,10 +6,21 @@ import {
   FaFileInvoice,
   FaCog,
   FaChartPie,
+  FaWarehouse,
 } from "react-icons/fa";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Sidebar({ isOpen, toggleSidebar }) {
+  const pathname = usePathname(); // Obtenemos la ruta actual
+
+  // Función para verificar si la ruta actual coincide con la de un enlace
+  const isActive = (path) =>
+    pathname === path
+      ? "bg-blue-100 text-blue-700"
+      : "hover:bg-gray-100 text-gray-900";
+
   return (
     <>
       {/* Superposición */}
@@ -29,13 +40,15 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
         >
           {/* Logo de Bildy */}
           <div className="sidebar-header flex items-center justify-center py-6 border-b border-gray-300">
-            <Image
-              src="/img/logo_bildy.png"
-              alt="Bildy Logo"
-              className="sidebar-logo w-40"
-              width={160}
-              height={40}
-            />
+            <Link href="/dashboard">
+              <Image
+                src="/img/logo_bildy.png"
+                alt="Bildy Logo"
+                className="sidebar-logo w-40"
+                width={160}
+                height={40}
+              />
+            </Link>
           </div>
 
           {/* Navegación */}
@@ -47,57 +60,80 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
             {/* Sección de Resumen */}
             <div>
-              <a
-                href="#"
-                className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition"
+              <Link
+                href="/dashboard/resume"
+                className={`flex items-center space-x-3 p-2 rounded-lg transition ${isActive(
+                  "/dashboard/resume"
+                )}`}
               >
                 <FaChartPie className="text-blue-500" />
-                <span className="font-medium">Resumen</span>
-              </a>
+                <span className="font-medium">Resume</span>
+              </Link>
             </div>
 
             {/* Sección de Clients */}
             <div>
-              <a
-                href="#"
-                className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition"
+              <Link
+                href="/dashboard/clients"
+                className={`flex items-center space-x-3 p-2 rounded-lg transition ${isActive(
+                  "/dashboard/clients"
+                )}`}
               >
                 <FaUsers className="text-blue-500" />
                 <span className="font-medium">Clients</span>
-              </a>
+              </Link>
             </div>
 
             {/* Sección de Projects */}
             <div>
-              <a
-                href="#"
-                className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition"
+              <Link
+                href="/dashboard/projects"
+                className={`flex items-center space-x-3 p-2 rounded-lg transition ${isActive(
+                  "/dashboard/projects"
+                )}`}
               >
                 <FaProjectDiagram className="text-blue-500" />
                 <span className="font-medium">Projects</span>
-              </a>
+              </Link>
             </div>
 
             {/* Sección de Delivery Notes */}
             <div>
-              <a
-                href="#"
-                className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition"
+              <Link
+                href="/dashboard/delivery-notes"
+                className={`flex items-center space-x-3 p-2 rounded-lg transition ${isActive(
+                  "/dashboard/delivery-notes"
+                )}`}
               >
                 <FaFileInvoice className="text-blue-500" />
                 <span className="font-medium">Delivery Notes</span>
-              </a>
+              </Link>
+            </div>
+
+            {/* Sección de Proveedores */}
+            <div>
+              <Link
+                href="/dashboard/suppliers"
+                className={`flex items-center space-x-3 p-2 rounded-lg transition ${isActive(
+                  "/dashboard/suppliers"
+                )}`}
+              >
+                <FaWarehouse className="text-blue-500" />
+                <span className="font-medium">Suppliers</span>
+              </Link>
             </div>
 
             {/* Sección de Settings */}
             <div>
-              <a
-                href="#"
-                className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition"
+              <Link
+                href="/dashboard/settings"
+                className={`flex items-center space-x-3 p-2 rounded-lg transition ${isActive(
+                  "/dashboard/settings"
+                )}`}
               >
                 <FaCog className="text-blue-500" />
                 <span className="font-medium">Settings</span>
-              </a>
+              </Link>
             </div>
           </nav>
         </div>

@@ -11,7 +11,7 @@ export async function registerUser(formData) {
         },
         body: JSON.stringify({
             name: formData.get("name"),
-            lastName: formData.get("lastName"),
+            surnames: formData.get("surnames"),
             email: formData.get("email"),
             password: formData.get("password"),
         })
@@ -86,17 +86,18 @@ export async function getUser(token) {
     }
   
     try {
-      const response = await fetch("/api/user", {
+      const response = await fetch(`${API_BASE_URL}/user`, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`, // Enviamos el token almacenado en coockies
           "Content-Type": "application/json", 
         },
       });
-  
+
       if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
+  
       const data = await response.json();
       return data;
       
@@ -109,7 +110,7 @@ export async function getUser(token) {
 
 // llamada a la api para crear clientes
 export async function addClient(clientData, token) {
-    const response = await fetch(`${API_BASE_URL}/api/client`, {
+    const response = await fetch(`${API_BASE_URL}/client`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -118,11 +119,11 @@ export async function addClient(clientData, token) {
         body: JSON.stringify(clientData),
     });
 
-    const data = await response.json();
-
     if (!response.ok) {
         throw new Error(data.message || "Error adding client", response.status);
     }
+
+    const data = await response.json();
 
     return data;
 }

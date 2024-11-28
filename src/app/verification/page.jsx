@@ -62,7 +62,7 @@ export default function Verification() {
       setSuccess(true);
       // Solo eliminamos el correo después de que la verificación sea exitosa
       localStorage.removeItem("email");
-      router.push("/dashboard");
+      router.push("/dashboard/clients");
     } catch (error) {
       setError("Invalid verification code");
     }

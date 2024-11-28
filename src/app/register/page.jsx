@@ -8,7 +8,7 @@ import Loading from "../components/Loading";
 
 export default function Register() {
   const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [surnames, setSurnames] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -31,7 +31,7 @@ export default function Register() {
     try {
       const formData = new FormData();
       formData.append("name", firstName);
-      formData.append("lastName", lastName);
+      formData.append("surnames", surnames);
       formData.append("email", email);
       formData.append("password", password);
 
@@ -77,8 +77,8 @@ export default function Register() {
             />
             <input
               type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              value={surnames}
+              onChange={(e) => setSurnames(e.target.value)}
               placeholder="Last name"
               required
               className="w-1/2 px-3 py-3 text-sm border rounded-lg focus:outline-none focus:ring focus:border-blue-300"

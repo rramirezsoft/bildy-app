@@ -21,16 +21,16 @@ export default function NotFound() {
           height={50}
           className="mx-auto mb-6"
         />
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">
+        <h1 className="text-3xl font-bold text-gray-800 mb-4">
           Page Not Found
         </h1>
-        <p className="text-lg text-gray-600 mb-6">
+        <p className="text-md text-gray-600 mb-6">
           The page you are looking for doesn&apos;t exist. Please check the URL
           or go back to the dashboard.
         </p>
         <button
           onClick={handleGoHome}
-          className="bg-blue-700 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-600 transition"
+          className="bg-blue-700 text-white  px-6 py-3 rounded-lg shadow hover:bg-blue-600 transition"
         >
           Go to Dashboard
         </button>

@@ -39,7 +39,13 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 relative">
+      {loading && (
+        <div className="absolute inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+          <Loading />
+        </div>
+      )}
+
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
           Login to your account
@@ -95,7 +101,7 @@ export default function Login() {
             className="w-full bg-teal-500 text-white py-3 text-sm rounded-lg hover:bg-teal-600 transition duration-200"
             disabled={loading}
           >
-            {loading ? <Loading /> : "Sign in with email"}
+            Sign in with email
           </button>
         </form>
         <div className="text-center mt-6">

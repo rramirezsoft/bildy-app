@@ -63,6 +63,11 @@ export default function Register() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      {loading && (
+        <div className="absolute inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+          <Loading />
+        </div>
+      )}
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 className="text-3xl font-bold mb-6">Create your ZoSale ID</h1>
         <form onSubmit={handleSubmit}>
@@ -139,9 +144,8 @@ export default function Register() {
           <button
             type="submit"
             className="w-full bg-teal-500 text-white py-3 text-sm rounded-lg hover:bg-teal-600 transition duration-200"
-            disabled={loading} // Deshabilitamos el botón mientras se procesa la petición
           >
-            {loading ? <Loading /> : "Sing up with email"}
+            Sing up with email"
           </button>
         </form>
       </div>

@@ -113,18 +113,73 @@ export async function addClient(clientData, token) {
     const response = await fetch(`${API_BASE_URL}/client`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`, // pasamos el token de autenticación
+            "Content-Type": "application/json",
         },
-        body: JSON.stringify(clientData),
+        body: JSON.stringify({
+            name: clientData.name,
+            cif: clientData.cif,
+            address: clientData.address,
+        }),
     });
 
     if (!response.ok) {
-        throw new Error(data.message || "Error adding client", response.status);
+        const errorData = await response.json(); 
+        throw new Error(errorData.message || "Error adding client"); 
     }
-
-    const data = await response.json();
-
-    return data;
+    return await response.json();
 }
+
+// llamada a la api para obtener los clientes
+export async function getClients(token) {
+    const response = await fetch(`${API_BASE_URL}/client`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error fetching clients");
+    }
+    return await response.json();
+}
+
+// llamada a la api para obtener clientes por id
+export async function getClientById(id, token) {
+    const response = await fetch(`${API_BASE_URL}/client/${id}`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error fetching client");
+    }
+    return await response.json();
+}
+
+//llamada a la api para actualizar campos de un cliente
+export async function updateClient(id, updatedData, token) {
+    const response = await fetch(`${API_BASE_URL}/client/${id}`, {
+        method: "PUT",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedData),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error editing client");
+    }
+    return await response.json();
+}
+
     

@@ -32,7 +32,7 @@ export default function Clients() {
     };
 
     fetchClients();
-  }, []);
+  }, [token]);
 
   const handleClientClick = async (clientId) => {
     setLoading(true);

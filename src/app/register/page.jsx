@@ -145,7 +145,7 @@ export default function Register() {
             type="submit"
             className="w-full bg-teal-500 text-white py-3 text-sm rounded-lg hover:bg-teal-600 transition duration-200"
           >
-            Sing up with email"
+            Sing up with email
           </button>
         </form>
       </div>

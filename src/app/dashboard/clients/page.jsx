@@ -14,11 +14,11 @@ export default function Clients() {
   const [clientFormVisible, setClientFormVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [clientDetails, setClientDetails] = useState({});
-  const token = getToken();
 
   useEffect(() => {
     const fetchClients = async () => {
       try {
+        const token = getToken();
         const clientList = await getClients(token);
         setClients(clientList);
         if (clientList.length > 0) {
@@ -32,7 +32,7 @@ export default function Clients() {
     };
 
     fetchClients();
-  }, [token]);
+  }, []);
 
   const handleClientClick = async (clientId) => {
     setLoading(true);
@@ -73,6 +73,7 @@ export default function Clients() {
   const handleSaveDetails = async () => {
     try {
       setLoading(true);
+      const token = getToken();
       const updatedClient = await updateClient(
         selectedClient._id,
         clientDetails,

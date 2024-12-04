@@ -3,7 +3,13 @@
 import { useEffect, useState } from "react";
 import ClientForm from "@/app/components/dashboard/clients/ClientForm";
 import Image from "next/image";
-import { getClients, getClientById, updateClient } from "@/app/utils/api";
+import {
+  getClients,
+  getClientById,
+  updateClient,
+  getProjectsByClient,
+} from "@/app/utils/api";
+import { useRouter } from "next/navigation";
 import getToken from "@/app/utils/auth";
 import Loading from "@/app/components/Loading";
 
@@ -14,6 +20,8 @@ export default function Clients() {
   const [clientFormVisible, setClientFormVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [clientDetails, setClientDetails] = useState({});
+  const [projects, setProjects] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -42,6 +50,11 @@ export default function Clients() {
       setSelectedClient(client);
       setClientDetails(client);
       setIsEditing(false);
+
+      // Obtenemos los proyectos asociados al cliente
+      const projectsList = await getProjectsByClient(clientId, token);
+      setProjects(projectsList);
+      console.log(projectsList);
     } catch (err) {
       console.error(err.message || "Failed to fetch client details");
     } finally {
@@ -97,6 +110,15 @@ export default function Clients() {
       alert("Failed to save changes. Please try again.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAddProject = () => {
+    if (selectedClient) {
+      localStorage.setItem("client", JSON.stringify(selectedClient));
+      router.push("/dashboard/projects/new");
+    } else {
+      console.error("No client selected!");
     }
   };
 
@@ -322,21 +344,47 @@ export default function Clients() {
           </div>
         </div>
 
-        {/* Proyectos asociados */}
-        <div className="p-6 bg-white shadow border border-gray-300 rounded-lg mt-6">
-          <h3 className="text-xl font-semibold mb-4">Associated Projects</h3>
-          <ul className="space-y-4">
-            {selectedClient?.projects?.map((project) => (
-              <li
-                key={project._id}
-                className="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-100 cursor-pointer"
-              >
-                <p className="text-sm font-medium text-gray-700 truncate">
-                  {project.name}
-                </p>
-              </li>
-            ))}
-          </ul>
+        {/* Proyectos */}
+        <div className="p-6 bg-white shadow border border-gray-300 rounded-lg">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-xl font-semibold">Projects</h3>
+
+            <button className="btn-primary text-sm" onClick={handleAddProject}>
+              Add Project
+            </button>
+          </div>
+
+          {/* Mostrar proyectos o mensaje */}
+          {projects.length > 0 ? (
+            <table className="w-full table-auto text-sm">
+              <thead>
+                <tr className="text-left border-b">
+                  <th className="px-4 py-2">Project Number</th>
+                  <th className="px-4 py-2">Project Name</th>
+                  <th className="px-4 py-2">Code</th>
+                  <th className="px-4 py-2">Date</th>
+                  <th className="px-4 py-2">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {projects.map((project) => (
+                  <tr key={project._id} className="border-b hover:bg-gray-100">
+                    <td className="px-4 py-2">{project.code}</td>
+                    <td className="px-4 py-2">{project.name}</td>
+                    <td className="px-4 py-2">{project.projectCode}</td>
+                    <td className="px-4 py-2">
+                      {new Date(project.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="px-4 py-2">{project.status}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div className="text-center text-gray-500">
+              <p>No projects assigned</p>
+            </div>
+          )}
         </div>
       </div>
     </main>

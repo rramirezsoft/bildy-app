@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import Image from "next/image";
+import Link from "next/link";
 import { getUser } from "@/app/utils/api";
 import getToken from "@/app/utils/auth";
 
@@ -45,7 +46,7 @@ export default function Header({ toggleSidebar }) {
         className="flex-grow p-2 border border-gray-300 rounded-lg md:ml-12"
       />
 
-      <div className="flex items-center space-x-4">
+      <Link href="/dashboard/user" className="flex items-center space-x-4">
         <Image
           src={placeholder}
           alt="User"
@@ -59,7 +60,7 @@ export default function Header({ toggleSidebar }) {
             ? `${user.name}${user.surnames ? ` ${user.surnames}` : ""}`
             : "Loading..."}
         </span>
-      </div>
+      </Link>
     </header>
   );
 }

@@ -182,4 +182,107 @@ export async function updateClient(id, updatedData, token) {
     return await response.json();
 }
 
-    
+// llamada a la api para actualizar la foto de perfil del usuario
+export async function updateProfileImage(file, token) {
+    const formData = new FormData();
+    formData.append("image", file, file.name);
+  
+    const response = await fetch(`${API_BASE_URL}/user/logo`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+  
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Error updating profile image");
+    }
+  
+    return await response.json();
+  }
+
+// llamada a la api para obtener los proyectos
+export async function getProjects(token) {
+    const response = await fetch(`${API_BASE_URL}/project`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error fetching projects");
+    }
+    return await response.json();
+}
+  
+// llamada a la api para obtener los proyectos por id
+export async function getProjectById(id, token) {
+    const response = await fetch(`${API_BASE_URL}/project/${id}`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error fetching project");
+    }
+    return await response.json();
+}
+
+// llamada a la api para obtener los proyectos de un cliente
+export async function getProjectsByClient(clientId, token) {
+    const response = await fetch(`${API_BASE_URL}/project/${clientId}`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error fetching projects");
+    }
+    return await response.json();
+}
+
+// llamada a la api para crear proyectos
+export async function createProject(projectData, token) {
+    const response = await fetch(`${API_BASE_URL}/project`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: projectData.name,
+        projectCode: projectData.code,
+        email: projectData.email, 
+        address: {
+          street: projectData.address.street,
+          number: projectData.address.number,
+          postal: projectData.address.postal,
+          city: projectData.address.city,
+          province: projectData.address.province,
+        },
+        clientId: projectData.clientId,
+        
+      }),
+    });
+  
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Error creating project");
+    }
+  
+    return await response.json(); 
+  }
+  

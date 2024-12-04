@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 
-export default function ClientAdded({ onClose }) {
+export default function ProjectAdded({ projectName, projectCode, onClose }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white rounded-lg shadow-lg p-6 relative w-96">
@@ -23,20 +23,21 @@ export default function ClientAdded({ onClose }) {
           />
 
           <h2 className="text-md font-semibold text-gray-800 mb-4">
-            Client saved and created successfully!
+            Congratulations!
           </h2>
 
           <div className="w-full border-t border-gray-200 my-3"></div>
 
-          <p className="text-xs text-blue-600 mb-4">
-            Do you want to associate a project with this client?
+          <p className="text-xs text-gray-600 mb-4">
+            The project "{projectName}" with internal code "{projectCode}" has
+            been successfully created.
           </p>
 
           <button
             onClick={onClose}
             className="btn-secondary px-4 py-2 text-sm font-medium"
           >
-            Yes, Let&apos;s go!
+            Close
           </button>
         </div>
       </div>

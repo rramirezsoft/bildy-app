@@ -29,8 +29,8 @@ export default function ProjectAdded({ projectName, projectCode, onClose }) {
           <div className="w-full border-t border-gray-200 my-3"></div>
 
           <p className="text-xs text-gray-600 mb-4">
-            The project "{projectName}" with internal code "{projectCode}" has
-            been successfully created.
+            The project &quot;{projectName}&quot; with internal code &quot;
+            {projectCode}&quot; has been successfully created.
           </p>
 
           <button

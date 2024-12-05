@@ -48,7 +48,7 @@ export default function Header({ toggleSidebar }) {
 
       <Link href="/dashboard/user" className="flex items-center space-x-4">
         <Image
-          src={placeholder}
+          src={user?.logo || placeholder}
           alt="User"
           className="h-10 w-10 rounded-full"
           width={40}

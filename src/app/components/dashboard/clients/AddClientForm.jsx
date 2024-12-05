@@ -6,7 +6,7 @@ import getToken from "@/app/utils/auth";
 import Loading from "@/app/components/Loading";
 import ClientAdded from "./ClientAdded";
 
-export default function ClientForm({ onClose }) {
+export default function AddClientForm({ onClose }) {
   const [clientData, setClientData] = useState({
     name: "",
     cif: "",

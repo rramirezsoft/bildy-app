@@ -1,76 +1,75 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getProjectsByClient } from "@/app/utils/api";
+import { deleteClient, getClients } from "@/app/utils/api";
 import getToken from "@/app/utils/auth";
 
 export default function Projects() {
-  const [projects, setProjects] = useState([]);
-  const [error, setError] = useState(null);
+  const [clients, setClients] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // Client ID de Real Madrid, por ejemplo
-  const realMadridClientId = "674ef41955ea1909c6096a06";
-
+  // Fetch clients on initial load
   useEffect(() => {
-    const fetchProjects = async () => {
+    const fetchClients = async () => {
       try {
-        const token = getToken(); // Asegúrate de obtener el token
-        console.log("Token obtenido:", token); // Verifica el token
-
-        // Llamada para obtener los proyectos
-        const fetchedProjects = await getProjectsByClient(
-          realMadridClientId,
-          token
-        );
-
-        // Verifica la respuesta
-        console.log("Proyectos obtenidos:", fetchedProjects);
-
-        // Asignar proyectos al estado
-        if (fetchedProjects && fetchedProjects.length > 0) {
-          setProjects(fetchedProjects);
-        } else {
-          setError("No se encontraron proyectos para este cliente.");
-        }
-      } catch (err) {
-        console.error("Error al obtener proyectos:", err);
-        setError(err.message || "Error al obtener proyectos.");
+        const token = getToken();
+        const clientList = await getClients(token);
+        setClients(clientList);
+      } catch (error) {
+        console.error("Error fetching clients:", error);
       }
     };
 
-    fetchProjects();
-  }, []); // Solo se ejecuta una vez cuando se monta el componente
+    fetchClients();
+  }, []);
+
+  // Delete a client by ID
+  const handleDeleteClient = async (clientId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this client?"
+    );
+    if (!confirmed) return;
+
+    setLoading(true);
+    try {
+      const token = getToken();
+      await deleteClient(clientId, token);
+      // Update the client list after deletion
+      setClients((prevClients) =>
+        prevClients.filter((client) => client._id !== clientId)
+      );
+      alert("Client deleted successfully.");
+    } catch (error) {
+      console.error("Error deleting client:", error);
+      alert("Failed to delete the client. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">
-        Proyectos del Cliente
-      </h1>
-
-      {/* Mostrar error si no se encuentran proyectos */}
-      {error && <div className="text-red-500 mb-4">{error}</div>}
-
-      {/* Mostrar los proyectos si están disponibles */}
-      {projects.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((project) => (
-            <div key={project.id} className="bg-white shadow-md rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-gray-800">
-                {project.name}
-              </h2>
-              <p className="text-gray-600">{project.projectCode}</p>
-              <p className="text-gray-600">{project.email}</p>
-              <p className="text-gray-600">
-                {project.address.street}, {project.address.number} -{" "}
-                {project.address.city}
-              </p>
-              <p className="text-gray-600">{project.address.province}</p>
+    <main className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Clients</h1>
+      {loading && <p>Loading...</p>}
+      <ul className="space-y-4">
+        {clients.map((client) => (
+          <li
+            key={client._id}
+            className="flex justify-between items-center bg-gray-100 p-4 rounded-md"
+          >
+            <div>
+              <p className="font-semibold">{client.name}</p>
+              <p className="text-sm text-gray-600">{client.email}</p>
             </div>
-          ))}
-        </div>
-      ) : (
-        <div className="text-gray-600">No hay proyectos disponibles.</div>
-      )}
-    </div>
+            <button
+              onClick={() => handleDeleteClient(client._id)}
+              className="btn-danger px-4 py-2 text-sm"
+            >
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
+    </main>
   );
 }

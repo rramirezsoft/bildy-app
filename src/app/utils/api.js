@@ -182,8 +182,45 @@ export async function updateClient(id, updatedData, token) {
     return await response.json();
 }
 
+// llamada a la api para añadir foto de perfil
+export async function updateClientLogo(file, clientId, token) {
+    const formData = new FormData();
+    formData.append("image", file, file.name);
+
+    const response = await fetch(`${API_BASE_URL}/client/logo/${clientId}`, {
+        method: "PATCH",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+        },
+        body: formData,
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error updating client logo");
+    }
+    return await response.json();
+}
+
+//llamada a la api para eliminar un cliente
+export async function deleteClient(id, token) {
+    const response = await fetch(`${API_BASE_URL}/client/${id}`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error deleting client");
+    }
+    return await response.json();
+}
+
 // llamada a la api para actualizar la foto de perfil del usuario
-export async function updateProfileImage(file, token) {
+export async function updateUserLogo(file, token) {
     const formData = new FormData();
     formData.append("image", file, file.name);
   

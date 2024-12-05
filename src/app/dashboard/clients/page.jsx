@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import AddClientForm from "@/app/components/dashboard/clients/AddClientForm";
 import UpdateClientForm from "@/app/components/dashboard/clients/UpdateClientForm";
+import DeleteClientConfirmation from "@/app/components/dashboard/clients/DeleteClientConfirmation";
 import Image from "next/image";
 import {
   getClients,
@@ -10,6 +11,7 @@ import {
   updateClient,
   getProjectsByClient,
   updateClientLogo,
+  deleteClient,
 } from "@/app/utils/api";
 import { useRouter } from "next/navigation";
 import getToken from "@/app/utils/auth";
@@ -24,6 +26,8 @@ export default function Clients() {
   const [clientDetails, setClientDetails] = useState({});
   const [projects, setProjects] = useState([]);
   const [logoFile, setLogoFile] = useState(null);
+  const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
+    useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -147,6 +151,26 @@ export default function Clients() {
     }
   };
 
+  const handleDeleteClient = async () => {
+    try {
+      const token = getToken();
+      const deletedClient = await deleteClient(selectedClient._id, token);
+
+      // Actualizamos la lista de clientes eliminando el cliente borrado
+      setClients((prevClients) =>
+        prevClients.filter((client) => client._id !== deletedClient._id)
+      );
+
+      // Limpiamos los datos del cliente seleccionado
+      setSelectedClient(null);
+
+      // Cerramos el modal de confirmación
+      setDeleteConfirmationVisible(false);
+    } catch (error) {
+      console.error("Failed to delete client:", error);
+    }
+  };
+
   const handleAddProject = () => {
     if (selectedClient) {
       localStorage.setItem("client", JSON.stringify(selectedClient));
@@ -231,7 +255,7 @@ export default function Clients() {
   }
 
   return (
-    <main className="flex flex-col lg:flex-row flex-1 gap-6 p-4 lg:p-6">
+    <div className="flex flex-col lg:flex-row flex-1 gap-6 p-4 lg:p-6">
       {/* Panel izquierdo (Clientes) */}
       <div className="w-full lg:w-1/4 bg-white shadow border border-gray-300 rounded-lg p-4 overflow-y-auto max-h-screen">
         <div className="flex justify-between items-center mb-4">
@@ -245,6 +269,7 @@ export default function Clients() {
             New client
           </button>
         </div>
+        {/* Lista de clientes */}
         <ul className="space-y-4">
           {clients.map((client) => (
             <li
@@ -254,23 +279,66 @@ export default function Clients() {
                   ? "bg-blue-100 border border-blue-500"
                   : "hover:bg-gray-100"
               }`}
-              onClick={() => handleClientClick(client._id)}
             >
-              <div className="w-12 h-12 flex-shrink-0">
-                <Image
-                  src={client.logo || "/img/placeholder.png"}
-                  alt={client.name}
-                  className="rounded-full object-cover"
-                  width={48}
-                  height={48}
-                />
+              <div
+                className="flex items-center gap-4 flex-1"
+                onClick={() => handleClientClick(client._id)}
+              >
+                <div className="w-12 h-12 flex-shrink-0">
+                  <Image
+                    src={client.logo || "/img/placeholder.png"}
+                    alt={client.name}
+                    className="rounded-full object-cover"
+                    width={48}
+                    height={48}
+                  />
+                </div>
+                <p className="text-sm font-medium text-gray-700 truncate">
+                  {client.name}
+                </p>
               </div>
-              <p className="text-sm font-medium text-gray-700 truncate">
-                {client.name}
-              </p>
+              {/* Botón de eliminar */}
+              <button
+                className={`text-red-500 hover:text-red-700 p-2 ${
+                  selectedClient?._id === client._id
+                    ? ""
+                    : "opacity-50 cursor-not-allowed"
+                }`}
+                onClick={() =>
+                  selectedClient?._id === client._id &&
+                  setDeleteConfirmationVisible(true)
+                }
+                disabled={selectedClient?._id !== client._id}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-5 h-5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 3h6m2 0h3m-4 0a2 2 0 00-2-2H9a2 2 0 00-2 2H4m4 0v2m6-2v2M5 6h14m-1 0v13a2 2 0 01-2 2H8a2 2 0 01-2-2V6m4 6v6m4-6v6"
+                  />
+                </svg>
+              </button>
             </li>
           ))}
         </ul>
+
+        {/* Componente de confirmación de eliminación */}
+        {deleteConfirmationVisible && (
+          <DeleteClientConfirmation
+            onConfirm={() => {
+              handleDeleteClient(); // Llama a la función para eliminar
+              setDeleteConfirmationVisible(false); // Cierra el componente
+            }}
+            onCancel={() => setDeleteConfirmationVisible(false)} // Cierra el componente si se cancela
+          />
+        )}
       </div>
 
       {/* Panel derecho (Detalles del cliente + Proyectos) */}
@@ -329,6 +397,6 @@ export default function Clients() {
           )}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

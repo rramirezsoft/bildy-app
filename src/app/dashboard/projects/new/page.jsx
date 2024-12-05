@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import getToken from "@/app/utils/auth";
 import ProjectAdded from "@/app/components/dashboard/projects/ProjectAdded";
 import Loading from "@/app/components/Loading";
+import Image from "next/image";
 
 export default function NewProject() {
   const [client, setClient] = useState(null);
@@ -213,23 +214,71 @@ export default function NewProject() {
         </form>
       </div>
 
-      {/* Panel derecho*/}
       <div className="w-full bg-white shadow-lg p-6 rounded-lg border border-gray-300">
         <h2 className="text-xl font-semibold mb-6 text-gray-800">Client</h2>
         {client ? (
           <div>
-            <p className="text-gray-700">
-              <strong>Name:</strong> {client.name}
-            </p>
-            <p className="text-gray-700">
-              <strong>Address:</strong>{" "}
-              {client.address
-                ? `${client.address.street}, ${client.address.number}, ${client.address.postal}, ${client.address.city}, ${client.address.province}`
-                : "Not available"}
-            </p>
-            <p className="text-gray-700">
-              <strong>CIF:</strong> {client.cif}
-            </p>
+            <div className="flex justify-center mb-6">
+              <Image
+                src={client.logo || "/img/placeholder.png"}
+                alt="Client Logo"
+                width={128}
+                height={128}
+                className="rounded-full object-cover border-4 border-blue-500"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label
+                htmlFor="clientName"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Name
+              </label>
+              <input
+                id="clientName"
+                type="text"
+                value={client.name}
+                readOnly
+                className="w-full mt-2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label
+                htmlFor="clientAddress"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Address
+              </label>
+              <input
+                id="clientAddress"
+                type="text"
+                value={
+                  client.address
+                    ? `${client.address.street}, ${client.address.number}, ${client.address.postal}, ${client.address.city}, ${client.address.province}`
+                    : "Not available"
+                }
+                readOnly
+                className="w-full mt-2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label
+                htmlFor="clientCif"
+                className="block text-sm font-medium text-gray-700"
+              >
+                CIF
+              </label>
+              <input
+                id="clientCif"
+                type="text"
+                value={client.cif}
+                readOnly
+                className="w-full mt-2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              />
+            </div>
           </div>
         ) : (
           <div>

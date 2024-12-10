@@ -77,6 +77,7 @@ export default function NewProject() {
   };
 
   const handleDiscard = () => {
+    localStorage.removeItem("client");
     router.push("/dashboard/projects");
   };
 

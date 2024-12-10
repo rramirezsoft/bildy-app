@@ -16,6 +16,7 @@ import {
 import { useRouter } from "next/navigation";
 import getToken from "@/app/utils/auth";
 import Loading from "@/app/components/Loading";
+import StatusBadge from "@/app/components/dashboard/StatusBadge";
 
 export default function Clients() {
   const [clients, setClients] = useState([]);
@@ -61,12 +62,31 @@ export default function Clients() {
 
       // Obtenemos los proyectos asociados al cliente
       const projectsList = await getProjectsByClient(clientId, token);
-      setProjects(projectsList);
+      const savedStatuses =
+        JSON.parse(localStorage.getItem("projectStatuses")) || {};
+      const projectsWithStatus = projectsList.map((project) => ({
+        ...project,
+        status: savedStatuses[project._id] || "pending",
+      }));
+      setProjects(projectsWithStatus);
     } catch (err) {
       console.error(err.message || "Failed to fetch client details");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleStatusChange = (projectId, newStatus) => {
+    setProjects((prevProjects) =>
+      prevProjects.map((project) =>
+        project._id === projectId ? { ...project, status: newStatus } : project
+      )
+    );
+
+    const savedStatuses =
+      JSON.parse(localStorage.getItem("projectStatuses")) || {};
+    savedStatuses[projectId] = newStatus;
+    localStorage.setItem("projectStatuses", JSON.stringify(savedStatuses));
   };
 
   const handleEditToggle = () => {
@@ -333,10 +353,10 @@ export default function Clients() {
         {deleteConfirmationVisible && (
           <DeleteClientConfirmation
             onConfirm={() => {
-              handleDeleteClient(); // Llama a la función para eliminar
-              setDeleteConfirmationVisible(false); // Cierra el componente
+              handleDeleteClient();
+              setDeleteConfirmationVisible(false);
             }}
-            onCancel={() => setDeleteConfirmationVisible(false)} // Cierra el componente si se cancela
+            onCancel={() => setDeleteConfirmationVisible(false)}
           />
         )}
       </div>
@@ -364,32 +384,41 @@ export default function Clients() {
             </button>
           </div>
 
-          {/* Mostrar proyectos o mensaje */}
           {projects.length > 0 ? (
-            <table className="w-full table-auto text-sm">
-              <thead>
-                <tr className="text-left border-b">
-                  <th className="px-4 py-2">Project Number</th>
-                  <th className="px-4 py-2">Project Name</th>
-                  <th className="px-4 py-2">Code</th>
-                  <th className="px-4 py-2">Date</th>
-                  <th className="px-4 py-2">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {projects.map((project) => (
-                  <tr key={project._id} className="border-b hover:bg-gray-100">
-                    <td className="px-4 py-2">{project.code}</td>
-                    <td className="px-4 py-2">{project.name}</td>
-                    <td className="px-4 py-2">{project.projectCode}</td>
-                    <td className="px-4 py-2">
-                      {new Date(project.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="px-4 py-2">{project.status}</td>
+            <div className="overflow-x-auto">
+              <table className="w-full table-auto text-sm">
+                <thead>
+                  <tr className="text-left border-b">
+                    <th className="px-4 py-2">Project Name</th>
+                    <th className="px-4 py-2">Code</th>
+                    <th className="px-4 py-2">Date</th>
+                    <th className="px-4 py-2">Status</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {projects.map((project) => (
+                    <tr
+                      key={project._id}
+                      className="border-b hover:bg-gray-100"
+                    >
+                      <td className="px-4 py-2">{project.name}</td>
+                      <td className="px-4 py-2">{project.projectCode}</td>
+                      <td className="px-4 py-2">
+                        {new Date(project.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="px-4 py-2">
+                        <StatusBadge
+                          initialStatus={project.status}
+                          onChange={(newStatus) =>
+                            handleStatusChange(project._id, newStatus)
+                          }
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           ) : (
             <div className="text-center text-gray-500">
               <p>No projects assigned</p>

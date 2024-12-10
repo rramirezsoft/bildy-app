@@ -259,7 +259,7 @@ export async function getProjects(token) {
   
 // llamada a la api para obtener los proyectos por id
 export async function getProjectById(id, token) {
-    const response = await fetch(`${API_BASE_URL}/project/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/project/one/${id}`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${token}`,
@@ -322,4 +322,21 @@ export async function createProject(projectData, token) {
   
     return await response.json(); 
   }
+
+// llamada a la api para obtener albaranes
+export async function getDeliveryNotes(token) {
+    const response = await fetch(`${API_BASE_URL}/deliverynote`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error fetching delivery notes");
+    }
+    return await response.json();
+}
   

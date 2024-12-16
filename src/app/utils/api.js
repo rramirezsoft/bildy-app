@@ -323,6 +323,24 @@ export async function createProject(projectData, token) {
     return await response.json(); 
   }
 
+// llamada a la api para actualizar proyectos
+export async function updateProject(id, updatedData, token) {
+    const response = await fetch(`${API_BASE_URL}/project/${id}`, {
+        method: "PUT",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedData),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error editing project");
+    }
+    return await response.json();
+}
+
 // llamada a la api para obtener albaranes
 export async function getDeliveryNotes(token) {
     const response = await fetch(`${API_BASE_URL}/deliverynote`, {
@@ -339,4 +357,101 @@ export async function getDeliveryNotes(token) {
     }
     return await response.json();
 }
+
+// llamada a la api para crear un albaran
+export async function createDeliveryNote(deliveryNoteData, token) {
+    const response = await fetch(`${API_BASE_URL}/deliverynote`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            clientId: deliveryNoteData.clientId,
+            projectId: deliveryNoteData.projectId,
+            format: deliveryNoteData.format,
+            material: deliveryNoteData.material,
+            hours: deliveryNoteData.hours,
+            description: deliveryNoteData.description,
+            workDate: deliveryNoteData.workDate,
+        }),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error creating delivery note");
+    }
+    return await response.json();
+}
+
+// llamada a la api para obtener albaran por id
+export async function getDeliveryNoteById(id, token) {
+    const response = await fetch(`${API_BASE_URL}/deliverynote/${id}`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error fetching delivery notes");
+    }
+    return await response.json();
+}
+
+// llamada a la api para descargar el pdf de un albaran
+export async function downloadDeliveryNotePDF(id, token) {
+    const response = await fetch(`${API_BASE_URL}/deliverynote/pdf/${id}`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+        },
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error downloading PDF");
+    }
+    return await response.blob();
+} 
+
+// llamada a la api para actualizar un albaran
+export async function updateDeliveryNote(id, updatedData, token) {
+    const response = await fetch(`${API_BASE_URL}/deliverynote/${id}`, {
+        method: "PUT",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedData),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error updating delivery note");
+    }
+    return await response.json();
+}
+
+// llamada a la api para obtener albaranes por proyecto
+export async function getDeliveryNotesByProject(projectId, token) {
+    const response = await fetch(`${API_BASE_URL}/deliverynote/project/${projectId}`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error fetching delivery notes");
+    }
+    return await response.json();
+}
+
+  
+
   

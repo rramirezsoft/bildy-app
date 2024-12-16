@@ -126,8 +126,6 @@ export default function Clients() {
         token
       );
 
-      console.log(clientDetails);
-
       let updatedLogo = null;
 
       // Actualizamos el logo si se ha seleccionado uno nuevo

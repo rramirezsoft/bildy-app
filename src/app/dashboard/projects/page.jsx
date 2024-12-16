@@ -110,7 +110,7 @@ export default function Projects() {
   }
 
   return (
-    <div className="p-4 bg-gray-100 min-h-screen">
+    <div className="p-4 bg-gray-100 min-h-screen w-full">
       {/* Barra de filtros */}
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 w-full max-w-full px-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full">

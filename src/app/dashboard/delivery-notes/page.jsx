@@ -21,13 +21,11 @@ export default function DeliveryNotes() {
 
     async function fetchData() {
       try {
-        // Obtenemos albaranes y clientes en paralelo
         const [notesData, clientsData] = await Promise.all([
           getDeliveryNotes(token),
           getClients(token),
         ]);
 
-        // Mapeamos clientes por su _id
         const clientsMap = clientsData.reduce((map, client) => {
           map[client._id] = client;
           return map;
@@ -36,6 +34,7 @@ export default function DeliveryNotes() {
         setDeliveryNotes(notesData);
         setClientsMap(clientsMap);
         setFilteredNotes(notesData);
+        console.log("Delivery notes:", notesData);
       } catch (error) {
         console.error("Error fetching data:", error.message);
       } finally {
@@ -51,10 +50,16 @@ export default function DeliveryNotes() {
     setFilter(value);
 
     const filtered = deliveryNotes.filter((note) => {
+      const client = clientsMap[note.clientId];
+
+      const formattedDate = new Date(note.createdAt)
+        .toLocaleDateString()
+        .toLowerCase();
+
       return (
-        note.deliveryCode.toLowerCase().includes(value) ||
-        note.date.includes(value) ||
-        note.clientName?.toLowerCase().includes(value)
+        note.format?.toLowerCase().includes(value) ||
+        formattedDate.includes(value) ||
+        client?.name.toLowerCase().includes(value)
       );
     });
 
@@ -83,7 +88,7 @@ export default function DeliveryNotes() {
   }
 
   return (
-    <div className="p-4 bg-gray-100 min-h-screen">
+    <div className="p-4 bg-gray-100 min-h-screen w-full">
       {/* Barra de filtros */}
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 w-full max-w-full px-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full">
@@ -98,7 +103,12 @@ export default function DeliveryNotes() {
               onChange={handleFilterChange}
               className="px-4 py-2 border rounded-lg shadow-sm w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <button className="btn-primary text-sm">New Delivery Note</button>
+            <button
+              onClick={() => router.push("/dashboard/delivery-notes/new")}
+              className="btn-primary text-sm"
+            >
+              New Delivery Note
+            </button>
           </div>
         </div>
       </div>
@@ -110,7 +120,7 @@ export default function DeliveryNotes() {
             <thead className="bg-gray-50 border-b">
               <tr>
                 <th className="text-left px-4 py-3 text-xs sm:text-sm font-semibold text-gray-600">
-                  Delivery Code
+                  Format
                 </th>
                 <th className="text-left px-4 py-3 text-xs sm:text-sm font-semibold text-gray-600">
                   Date
@@ -130,24 +140,39 @@ export default function DeliveryNotes() {
                   <tr
                     key={note._id}
                     className="border-b hover:bg-gray-100 cursor-pointer transition-colors duration-200"
-                    onClick={() =>
-                      router.push(`/dashboard/delivery-notes/${note._id}`)
-                    }
+                    onClick={() => {
+                      localStorage.setItem("noteClientId", note.clientId);
+                      localStorage.setItem("noteProjectId", note.projectId._id);
+                      router.push(`/dashboard/delivery-notes/${note._id}`);
+                    }}
                   >
                     <td className="px-4 py-4 text-xs sm:text-sm text-gray-700">
-                      {note.deliveryCode}
+                      {note.format}
                     </td>
                     <td className="px-4 py-4 text-xs sm:text-sm text-gray-700">
-                      {`${new Date(note.date).toLocaleDateString()} ${new Date(
-                        note.date
+                      {`${new Date(
+                        note.createdAt
+                      ).toLocaleDateString()} ${new Date(
+                        note.createdAt
                       ).toLocaleTimeString()}`}
                     </td>
-                    <td className="px-4 py-4 text-xs sm:text-sm text-gray-700">
-                      {client ? client.name : "Unknown Client"}
+                    <td className="px-4 py-4 text-xs sm:text-sm text-gray-700 flex items-center">
+                      {client ? (
+                        <div className="flex items-center">
+                          <img
+                            src={client.logo}
+                            alt={client.name}
+                            className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gray-200 mr-2"
+                          />
+                          <span>{client.name}</span>
+                        </div>
+                      ) : (
+                        <span>Unknown Client</span>
+                      )}
                     </td>
                     <td className="px-4 py-4 text-xs sm:text-sm text-gray-700">
                       <StatusBadge
-                        initialStatus={note.status}
+                        initialStatus={note.status || "pending"}
                         onChange={(newStatus) => {
                           handleStatusChange(note._id, newStatus);
                         }}

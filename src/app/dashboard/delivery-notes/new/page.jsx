@@ -13,13 +13,13 @@ import Image from "next/image";
 import DeliveryNoteAdded from "@/app/components/dashboard/delivery-notes/DeliveryNoteAdded";
 
 export default function CreateDeliveryNote() {
-  const id = localStorage.getItem("projectId");
+  const [id, setId] = useState("");
   const [project, setProject] = useState(null);
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
   const [deliveryNote, setDeliveryNote] = useState({
     clientId: "",
-    projectId: id || "",
+    projectId: "",
     format: "",
     material: "",
     hours: "",
@@ -29,6 +29,13 @@ export default function CreateDeliveryNote() {
 
   const [isModalVisible, setModalVisible] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const projectId = localStorage.getItem("projectId");
+      setId(projectId); // Update state with the projectId from localStorage
+    }
+  }, []);
 
   useEffect(() => {
     if (!id) return;
